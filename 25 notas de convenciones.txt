@@ -1,0 +1,16 @@
+https://github.com/rubocop-hq/ruby-style-guide
+
+consejos de descripciones
+
+-- Cuando solo le paso -> rubocop si me salen las offenses.
+
+--- Intenta agregando # encoding: UTF-8 al inicio del archivo.
+
+como recomendación sugiere que instalemos un complemento rubocop
+
+gm install rubocop
+
+este complemento al ejecutarlo en cierto directorio, revisa todos los documentos
+rb y analiza la sintaxis de cada documento presentando al final un reporte
+de líneas de código mal escritas, tal vez por falta de espacios entre elementos
+y otros statements mal usados, habría que ver sus especificaciones

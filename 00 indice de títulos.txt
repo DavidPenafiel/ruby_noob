@@ -1,0 +1,42 @@
+Introducción a Ruby
+¿Qué es Ruby?	-	2:00 min
+Introducción al Curso de Ruby	-	4:00 min
+Instalación en Windows	-	7:00 min
+Operaciones y variables	-	15:00 min
+Estructuras selectivas	-	11:00 min
+Calcular si un número es par	-	3:00 min
+Definición e invocación de métodos	-	11:00 min
+Arreglos	-	10:00 min
+Estructuras repetitivas	-	9:00 min
+Métodos, blocks y procs
+Argumentos y valores de retorno	-	13:00 min
+Métodos de arreglos, hashes	-	20:00 min
+Fibonacci con Ruby	-	9:00 min
+Blocks, procs y lambdas	-	8:00 min
+Lectura de archivos	-	10:00 min
+Manejo de excepciones	-	18:00 min
+Programación Orientada a Objetos
+Objetos y clases en Ruby	-	13:00 min
+Scope de variables	-	14:00 min
+Encapsulamiento	-	14:00 min           <-
+Herencia	-	11:00 min
+Simulador de patos	-	12:00 min
+Mixins	-	7:00 min
+Polimorfismo	-	10:00 min
+Gemas	-	5:00 min
+Buenas prácticas
+Testing	-	10:00 min
+Convenciones de código, rubocop	-	6:00 min
+Proyecto: Scrapping
+¿Qué es hacer scrapping?	-	16:00 min
+Descargar una lista de archivos	-	5:00 min
+Proyecto: Aplicación web, consumiendo API
+Hacer una app sencilla	-	12:00 min
+Usar API	-	9:00 min
+Hacer deploy	-	10:00 min
+Conclusiones
+Cierre del curso	-	1:00 min
+Retos/Desafíos
+Juego de adivina el número	-	0:22 min
+Modelar un televisor	-	0:43 min
+Aplicación Web	-	0:29 min

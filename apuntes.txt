@@ -1,0 +1,318 @@
+git
+
+instalar
+https://git-scm.com/ 
+descargo el que hay de 42 mb
+instalo con sí a todo
+luego en el cmd presiono git si está bien instalado, saldrá mucho texto
+para la versión git --version y te da la versión del sistema git version 2.19.2.windows.1
+configurar ahora mi usuario
+git config --global user.email "josedpz@gmail.com"
+git config --global user.name "Your Name"
+
+me tengo que poner en una carpeta base y crear mi sistema de repositorio
+git init repositorio_dave
+
+si en caso en el gitbash sale una X es tal vez porque la carpeta repositorio no se ha inicializado con las carpetas de repositorio git para eso entramos a la carpeta y se pone
+git init
+esto crea una carpeta oculta llamada .git y para probar podríamos borrar la carpeta
+	rm -rf .git no lo hagas porque borrarías todo el repositorio
+
+ahora podemos crear un documento x.xls y preguntarnos si el repositorio lo identifica
+	git status
+nos puede presentar que ese documento x.xls no está registrado y lo hacemos
+	git add x.xls
+y listo ya está en nuestro repositorio y podemos comprobarlo
+	git status
+
+si queremos que ese x.xls salga del registro pero no se borre
+	git rm --cached x.xls
+
+si queremos que todos los documentos, no importa cuáles tengamos en el directorio, se agreguen al proyecto o llamado stage
+	git add -A
+
+si queremos que x.xls se borre del registro y del repositorio para siempre
+	git rm x.xls
+claro que podrías borrar el documento sin borrarlo del registro también
+	git rm x.xls
+
+si queremos embromar con agregar x.xls solo por probar si se agregaría
+	git add -n x.xls
+
+todavía nuestro x.xls queda registrado en el stage pero no está en nuestro repositorio, para esto debemos admitirlo formalmente y que se copie en nuestro repositorio de control, para que si en el futuro queremos retroceder y arreglar algo, podamos volver a este punto ya que se hace una copia de x.xls hasta el punto en que lo admitimos como una versión funcional
+	git commit -m “inicializar nuestro proyecto”
+ahora los documento agregados, que están en status verde ahora ya también están en nuestro control de versiones, en el detalle pueden salir errores de si hay algo que no se haya podido agregar al repositorio, pero en el git status ya no va a salir nada en verde, solo los documentos en rojo
+
+digamos que modificamos un documento, al git status va a salir una alerta de documento modificado, pero hacemos un  git add -A para volver a agregar al stage el documento modificado y git commit -m “cambio importante ejemplo” para insertarlo al repositorio de nuevo
+
+ahora si tenemos que un info.txt queríamos agregarlo en ese commit para que entre a esa versión, tenemos que darle git add info.txt y luego para agregarlo a la versión enmendamos con git commit --amend
+para salir del editor VI debes presionar esc para salir del modo edición a modo opciones, luego escribir :wq para guardar y salir, o solo :q para salir
+
+el uso del editor VI está en el instructivo https://www.unirioja.es/cu/enriquez/docencia/Quimica/vi.pdf
+
+ahora para ponerle un nro de versión a la foto actual de nuestro proyecto admitido con su commit
+	git tag -a 0.5 -m ‘versión de pruebas’
+
+ahora para ver la versión actual de nuestro stage listando en pantalla
+	git tag -l
+
+al hacer git log ya se verá que la versión actual tiene una versión 0.5 por ejemplo
+
+pero si nos hemos olvidado de ponerle nro de versión a algún commit pasado pues podemos primero listar las versiones con git log luego copiamos el has o código sha del que le falta y lo vamos a versionar
+	git tag 0.3 14ca9dbb4a037a28cdad2cb1a969feffc11bebbb
+
+al hacer git log ya se verán versionados todos los commit incluso listar todas las versiones
+	git tag -l
+
+si nos hemos equivocado en ponerle un nro de versión pues podemos borrarle todo el nro
+	git tag -d 0.3
+y volverle a poner con el hash correspondiente, pero si queremos simplemente modificarlo, aprovechamos en modificar también su nombre (ojo comillas dobles solo en este caso)
+	git tag -f -a 0.1 -m “iniciando el proyecto de prueba” 14ca9dbb4a037a28cdad2cb1a969feffc11bebbb
+
+pero si no se ha borrado el versionado 0.3 y está junto al 0.1 así que hay que corregirlo
+	git tag -d 0.3
+
+los logs pueden ser realmente extensos así que podríamos listarlos solo con un
+	git log --oneline
+con git log --oneline --graph se podrá listar versiones paralelas pero más adelante
+para presentar cierta cantidad de últimos logs por ejemplo 3 últimos
+	git log -3 --oneline
+estos --oneline presentan un código hash reducido, lo que puede simplificarnos cosas
+
+para comparar versiones de código se utilizan los hash reducidos para no complicarse
+	git diff 14ca9db
+lo anterior compara la versión actual con la versión de entonces
+lo siguiente compara git se comparan 2 versiones, pero invirtiendo el orden también puede presentar resultados inesperados, en rojo lo que ya no está por ejemplo al invertirse el orden puede salir en verde como si fuera código nuevo
+git diff 14ca9db 9ddfc52
+
+para regresar al estado stage de una versión antigua debe tenerse cuidado usando los distintos parámetrosdel comando reset  --soft --mixed y --hard
+
+
+
+el reset --soft sirve para regresar al punto justo antes de hacer commit del hash de versión dada, osea están como git add los que estaban admitidos pero falta el commit
+	git reset --soft 14ca9db
+con eso hemos regresado a la última versión justo antes del commit, por ejemplo la 0.5 eliminando los cambios después del commit y dejando el estado de los elementos en stage
+se puede comprobar haciendo git status en donde todavía existen documentos por agregar al repositorio con un commit
+
+el reset --mixed sirve para regresar al punto justo antes de hacer commit del hash de versión dada y además retirar a todos los elementos agregados al stage antes del commit, osea haría falta hacer el git add a los que estaban modificados y falta el git add
+	git reset --soft 14ca9db
+luego de esto todavía seguiríamos en la versión 0.5 pero sin hacer stagging a los elementos
+
+si hemos hecho un git add de un documento que no debíamos agregar aún al stage, debemos retirarlo con git reset HEAD 
+	git reset HEAD 14ca9db
+con eso hemos regresado a una versión anterior por ejemplo de la 0.5 a la 0.3 que tal vez era más estable y comprobada y se han eliminado los elementos de la 0.5
+pero si olvidamos que la versión 0.5 todavía tenía cosas por recuperar antes de borrarlo y si todavía tenemos en lista el sha de la última modificación entonces podemos hacer de igual manera git reset --hard y el sha del que hemos borrado y regresan todos los logs a la historia de nuevo
+
+notas de alumnos.
+git reset --soft [SHA 1]: elimina los cambios hasta el staging area
+git reset --mixed [SHA 1]: elimina los cambios hasta el working area
+git reset --hard [SHA 1]: regresa hasta el commit del [SHA 1] 
+
+_____________________________________________________
+
+se puede configurar un editor de documentos que también es configurable con el git y que nos permita hacer commits y corregirlos cuando les hace falta título o comentario del commit
+
+git config --global core.editor "atom --wait"
+
+con esto ahora el git va a abrir el atom cada vez que se necesite ponerle nombre al commit por ejemplo cuando se haga git commit y no se ponga título
+
+____________________________________________________
+
+para iniciar una etapa paralela del proyecto se crea una rama del mismo con branch
+	git branch extension
+con esto creamos nuestra rama extensión y podemos listar todas las ramas con
+	git branch -l
+para borrar el branch que hicimos
+	git branch -d extension
+si la rama tiene ya cambios y commits será tan dificil como borrar con un simple rm una carpeta que tiene contenido y subcarpetas así que también se puede forzar
+	git branch -D extension
+
+para renombrar nuestra rama es con el parámetro -m
+	git branch -l extension addenda
+
+______________________________________________________
+
+para usar la rama que hemos creado utilizamos el comando checkout
+git checkout addenda
+con el comando checkout también podemos desplazarnos entre commits pasándole un sha
+git checkout f578a2d
+todo esto para que distintos equipos puedan trabajar en las ramas distíntas en paralelo para en el futuro poder unirlas y consolidar un proyecto de desarrollo monolítico
+
+ahora mientras trabajamos en nuestro espacio de trabajo master guardamos los cambios en nuestros documentos ejm index.html, los pasamos al stage con git add .  luego hacemos commit, pero cuando pasemos al git checkout addenda el index.html será diferente al del master, al hacer cambios en esta rama y hacer commit cambiarán los archivos de esta rama distinto al addenda, al alternar se puede ver el cambio, incluso con el mismo archivo abierto en el editor atom
+otra más, si quieres anular una modificación que esté para hacer git add
+	git checkout -- index.html
+y se restablecerá al tiempo del commit
+
+_______________________________________________________
+
+
+merge
+
+para unir las dos versiones trabajadas en paralelo nos posicionamos en una rama por ejemplo master
+	 git merge addenda
+ahora si la versión por ejemplo de index.html es diferente en cada lado, es posible que el git, abra las fuentes y te obligue a guardar los cambios ya solucionados en el código
+están delimitados con <<<<<<<< HEAD que vendría a ser el master en el que nos hemos posicionado, y luego el final del código en conflicto que sería >>>>>>> addenda ; al solucionar los cambios y borrar el texto que delimita el conflicto guardamos el index.html y revisamos el status, nos pide agregar todo al stage y luego hacer commit de esta unión y el repositorio actual habrá solucionado su conflicto de versiones
+
+finalmente para ver los cambios podemos presentar la línea de desarrollo
+	git log --oneline --graph
+el resultado es el siguiente
+
+*   544a22e (HEAD -> master) proyecto merged
+|\
+| * a2ae72f (addenda) adenda1
+* | abf70ac mastering1
+|/
+* c62fbb0 (tag: 1.0) configuración del comit final
+* f578a2d (tag: 0.8) fin del proyecto
+* 7cd4565 (tag: 0.6) último cambio en html reingresado
+* 9ddfc52 (tag: 0.5) modificación de prueba del index
+* 14ca9db (tag: 0.1) inicio de nuestro proyecto
+
+los símbolos en rojo es lo que simula el gráfico de avance, de ramas y merge
+
+_________________________________________________________
+
+ahora creamos otras dos branches o ramas con modificaciones independientes
+estensionA y estensionB, estoy en la A pero en el log graph sale lo siguiente
+
+DAVE@LAPTOP-DAVID MINGW64 /c/gitRep/repositorio_dave (extensionA)
+$ git log --oneline --graph
+* b4eae2e (HEAD -> extensionA) extensión A actualizada
+* 7c830c2 extensión A
+*   544a22e (master) proyecto merged
+|\
+| * a2ae72f (addenda) adenda1
+* | abf70ac mastering1
+|/
+* c62fbb0 (tag: 1.0) configuración del comit final
+* f578a2d (tag: 0.8) fin del proyecto
+* 7cd4565 (tag: 0.6) último cambio en html reingresado
+* 9ddfc52 (tag: 0.5) modificación de prueba del index
+* 14ca9db (tag: 0.1) inicio de nuestro proyecto
+
+ahora no queremo usar el merge para ver cómo es que las ramas terminan uniéndose al final, sino que se quiere ver la unión en la misma línea del tiempo sin bifurcaciones
+git rebase rebase extensionA
+git rebase --continue
+git rebase --abort
+tuve que usar las anteriores para intentar el rebase pero al final cancelé todo, y además ví algunos extras al poner git branch -l como branches que no descarté con git branch -D rama
+
+_______________________________________________________
+stash
+
+si estamos trabajando en una rama A y necesitamos movernos a otra B pero no hemos terminado de hacer modificaciones en la rama A por tanto no podemos hacerle commit, pero si nos movemos así nomás a la rama B, las modificaciones en A se pueden borrar
+	git add -A
+git stash
+ahora sí podemos salir con un checkout a otro lado
+también se puede listar y borrar nuestros stash
+	git stash list 			para listar
+$ git stash list
+stash@{0}: WIP on extensionA: ba6876a Actualización eA
+si nos movimos con checkout a otra rama y regresamos al extensionA 
+parece que no hubiéramos hecho cambios y estuviera en el commit anterior del A, pero para restablecer los cambios que hicimos en el stash ejecutaremos
+git stash apply
+y volverán los cambios al stash, luego de esto ya podemos terminar nuestras modificacioes y hacer commit en todo caso listaremos nuestro stash y lo pateamos si no nos sirve
+git stash drop	0
+puede ponerse en vez del 0 toda la referencia stash@{0} 
+pero si tenemos más stash y alguno aplica mejor podremos especificar cuál queremos
+	git stash apply 3 		o también
+	git stash apply stash@{3}
+
+________________________________________________________
+cherry-pick
+
+en algún momento vamos a tener un error al agregar un documento en una rama equivocada A cuando debía ser en B, sólo por el apuro de redactar el doc, y está ya commited en A, y para llevarlo a B podemos, aún estando en a, hacer un git log --oneline y copiar el sha del último commit en A, y ahora pasamos al branch B
+	git cherry-pick 8e3cdc9
+y recoge el commit que hicimos en A y lo pone en B pero fuera del stage así que si deseamos podemos sacar un status y luego hacer el git add correspondiente y hacer un último commit, en mi caso luego hice un merge en mi master con el B y luego con el A, y listo, me quedó todo consolidado mas o menos así
+
+*   9b7b2bc (HEAD -> master) cierre del openning último
+|\
+| * 8e3cdc9 (extensionA) clasificado no abrir por nada de nadis
+* |   e954f58 secreto al descubiertaaa
+|\ \
+| * | e24b5e3 (extensionB) salvados por la capaña
+| * | e108f0b clasificado no abrir por nada de nadis
+| * | 9d6aca9 commt de B para rebasear con master
+* | | 20635a0 el chisme del anio
+* | | 27ad94e rebase union A
+| |/
+|/|
+* | ba6876a Actualización eA
+|/
+* b4eae2e extensión A actualizada
+* 7c830c2 extensión A
+*   544a22e proyecto merged
+|\
+| * a2ae72f adenda1
+* | abf70ac mastering1
+|/
+* c62fbb0 (tag: 1.0) configuración del comit final
+* f578a2d (tag: 0.8) fin del proyecto
+* 7cd4565 (tag: 0.6) último cambio en html reingresado
+* 9ddfc52 (tag: 0.5) modificación de prueba del index
+* 14ca9db (tag: 0.1) inicio de nuestro proyecto
+
+________________________________________________________________
+
+github
+creamos una cuenta
+y luego de estar verificaditos, probablemente pase un tiempo para eso
+crearemos nuestro repositorio público nomás porque el provado cuesta / dólares mensual para repositorios privados e ilimitados
+al crear un repositorio o ver un repositorio público de alguien, a la derecha habrá un botón Clone or download, que nos permite clonar el proyecto en alguna parte de nuestros directorios como un repositorio en el que podamos hacer cambios personales, además saber cuál fue su historia, etc, pero para clonarlo desde el git bash de nuestra computadora debemos llamar a esta descarga desplegando el botón clone or download y copiar la especie de url que se presenta en una caja de texto y luego pegarla en la siguiente orden
+	git clone https://github.com/neo4j/neo4j.git
+	git clone git@github.com:DavidPenafiel/legadoIrrelevant.git
+estos ejemplos son distintos pero bien los dos deberían funcionar, porque las extensiones .git permite saber que es descargable
+yo descargué el primero, tomó tiempo porque es bien grande como de 500 mb
+
+__________________________________________________________
+llaves ssh
+
+en git tienes que loguearte en el github para poder hacer clonning y programar
+
+en tu computadora tienes que ir a tu directorio base del git
+	cd ~/.ssh
+	cd ~/ssh && ssh-keygen
+puedes presionar enter 2 veces sin problemas para no poner una carpeta en donde guardar el key y también para ponerle contraseña, lo normal es crearlo con nuestra credencial osea nuestro correo registrado en github
+	ssh-keygen -t rsa -b 4096 -C "josedpz@gmail.com"
+ luego se ha creado la carpeta .ssh dentro debe haber un documento id_rsa.pub lo abrimos con algún editor de texto y copiamos el contenido, abrimos nuesra cuenta github, luego en las configuraciones settings de nuestra cuenta (no de los repositorios) y luego la opción SSH and GPG keys, más rápido en el link https://github.com/settings/keys, ahora sí hasta se solucionan las descargas tipo clone en caso que hubiéramos tenido problemas.
+para copiar nuestro codigo ssh también podemos ejecutar pbcopy < ~/.ssh/id_rsa.pub 
+ahora que lo tenemos en nuestro clipboard ya podemos ponerlo en nuestra configuración de keys ssh
+
+__________________________________________________________
+remote
+
+para hacer una conexión con la cadena SSH se consigue la cadena de nuestro repositorio en github y luego se arma el comando
+git remote add origin git@github.com:DavidPenafiel/repositorio_dave.git
+el orden es el siguiente
+git remote add [origin] [SSH/HTTPS]
+donde “origin” es el nombre de x default o por convención de la conexion, podría ser cualquier otra cosa en vez de ello y diferenciarse del nombre de otras conexiones 
+ahora, estando en el master de un repositorio local hacemos esa conexión 
+pero si hemos cambiado de idea también podemos retirar la conexión
+git remote remove origin
+y para listar las conexiones existentes
+git remote -v
+luego cuando estemos seguros de la conexión y el repositorio ideal operaremos con envíos y recuperación de elementos osea push y fetch 
+git fetch origin master
+con lo anterior recuperamos la rama master del repositorio de github
+pero no hace ningún cambio o adición de elementos en nuestro master local y para mezclar el master local con el master github.
+git merge origin/master
+si me pide a mi contraseñan este diciembre 2018 es b* (yo sé el resto..)
+puede botar un error. fatal: refusing to merge unrelated histories, luego intentamos otra vez
+git merge origin/master --allow-unrelated-histories
+puede pedir modificar el log que usa el git como bitácora y se actualiza al fin los cambios del exterior sobre el repositorio local
+
+ahora para intentar resumir el fetch y el merge y actualizar de un solo golpe el repo. local
+git pull origin master
+no es recomendable como opción inicial porque no soluciona el error que puede generar esta excepción:  fatal: refusing to merge unrelated histories
+(la conexión que acabo de hacer está como origen y no origin)
+
+___________________________________________________________
+push
+
+para esto debe haberse hecho un git clone o pull
+git push origin master
+
+tuve un problema descrito en https://es.stackoverflow.com/questions/210678/github-refusing-to-merge-unrelated-histories
+tuve que hacer un clone para insertar nuevos cambios en github con git push
+
+podemos exportar  nuestros tags para hacer un lanzamiento o actualizar nuestros releases
+	git push origin master --tags
